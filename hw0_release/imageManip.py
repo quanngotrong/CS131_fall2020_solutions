@@ -20,7 +20,7 @@ def load(image_path):
 
     ### YOUR CODE HERE
     # Use skimage io.imread
-    pass
+    out = io.imread(image_path)
     ### END YOUR CODE
 
     # Let's convert the image to be between the correct range.
@@ -45,7 +45,7 @@ def crop_image(image, start_row, start_col, num_rows, num_cols):
     out = None
 
     ### YOUR CODE HERE
-    pass
+    out = image[start_row:(start_row+num_rows), start_col:(start_col+num_cols)]
     ### END YOUR CODE
 
     return out
@@ -68,7 +68,7 @@ def dim_image(image):
     out = None
 
     ### YOUR CODE HERE
-    pass
+    out = 0.5 * (np.square(image))
     ### END YOUR CODE
 
     return out
@@ -96,7 +96,13 @@ def resize_image(input_image, output_rows, output_cols):
     #    > This should require two nested for loops!
 
     ### YOUR CODE HERE
-    pass
+    row_scale_factor =(input_image.shape[0]/output_rows)
+    colum_scale_factor = (input_image.shape[1]/output_cols)
+
+    for i in range(output_rows):
+        for j in range(output_cols):
+            output_image[i][j] = input_image[int(i*row_scale_factor)][int(j*colum_scale_factor)]
+                    
     ### END YOUR CODE
 
     # 3. Return the output image
@@ -119,7 +125,11 @@ def rotate2d(point, theta):
     # Reminder: np.cos() and np.sin() will be useful here!
 
     ## YOUR CODE HERE
-    pass
+    
+    m = np.array([[np.cos(theta), -np.sin(theta)],[np.sin(theta), np.cos(theta)]])
+    
+    new_point = np.dot(m, point)
+    return new_point
     ### END YOUR CODE
 
 
@@ -141,7 +151,19 @@ def rotate_image(input_image, theta):
     output_image = np.zeros_like(input_image)
 
     ## YOUR CODE HERE
-    pass
+    h = input_image.shape[0]
+    w = input_image.shape[1]
+    for i in range(w):
+        for j in range(h):
+            j_new, i_new = rotate2d(np.array([j-w/2,h/2- i]), theta)
+            i_new =int(h/2- (i_new) )
+            j_new = int(-(j_new) + w/2)
+            if i_new >= h or j_new >= w or i_new < 0 or j_new < 0:
+                continue
+            else:
+                output_image[i_new][j_new] = input_image[i][j]
+    
+       
     ### END YOUR CODE
 
     # 3. Return the output image
