@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsfonts,amssymb, amsmath}
+\usepackage{float}
+\pagestyle{empty}
+\parindent 0px
+
+
+\title{Lecture 6: Edge Detection}
+
+\begin{document}
+\maketitle
+
+\section*{Line Detection}
+\subsection*{Intro to Hough transform}
+- Hough Transform: find the location of lines in images. \\
+- Hough transform can detect lines, circles and other structures only if their parametric equation is known \\
+- It can give robust detection under noise and partial occlusion \\
+
+\subsection*{Prior to Hough Transform}
+- Assume that we have performed edge detection, for example, by thresholding the gradient magnitude image \\
+\subsection*{Naive Line Detection}
+- For every pair of edge pixels:
+-- Compute equation of line
+-- Check if other pixels satisfy equation
+- Complexity: $O(N^2)$
+
+\subsection*{Detecting lines using Hough transform}
+- First step: transform edge points into new space \\
+- Consider an edge point of known coordinates $(x_i, y_i)$, there are many potential lines passing through it. \\
+- This family of lines have the form: $y_i = a*x_i+b$ \\
+- $(x_i, y_i)$ are constants, while (a,b) can change. This gives rise to a new space where (a,b) are the variables \\
+- a point $(x_i, y_i)$ transforms into a line in the (a,b) space: $b = -a * x_i + y_i$ \\
+- Another edge point$(x_2, y_2)$ will give rise to another line in the $(a,b)$ space \\
+- Colinear points in the (x,y) space transform into lines in the (a,b) space that intersec at a single point (a',b'). \\
+- We can detect lines by finding such intersection point (a',b') in the (a,b) space \\
+- Our resulting line equation in the original space is $y = a'*x +b'$ \\
+- To find the intersection points in the (a,b) space: quantizing it into cells \\
+- Instead of transforming a point to an explicit line, we vote on the discrete cells that are 'activated' by the transformed line in (a,b) (accumulator cells)\\
+- Cells that receive more than a certain number of votes are assumed to corresponding to lines in (x,y) space \\
+- For each (x,y) edge point: \\
+-- Vote on cells that satisfy the corresponding (a,b) line equation \\
+- Find cells with more votes than threshold \\
+- However, this cannot represent vertical lines as the slope parameter will be unbounded. Alternatively, we parameterize a line using $\theta\in[-\pi,\pi]$ and p $\in R$ as follows:
+$$p=x\cdot \cos{\theta}+y\cdot \sin{\theta}$$
+
+
+
+
+\end{document}
